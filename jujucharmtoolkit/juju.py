@@ -42,6 +42,11 @@ class Juju(object):
 
     if proc_name.endswith('_joined'):
       juju_action = 'joined'
+    elif proc_name.endswith('_changed'):
+      juju_action = 'changed'
+    elif proc_name.endswith('_broken'):
+      juju_action = 'broken'
+
     if not juju_action:
       raise Exception("Unknown action: %s" % proc_name)
     
@@ -66,6 +71,8 @@ class Juju(object):
   
 class Relation(object):
   def __init__(self, relation_id=None):
+    if not relation_id:
+      relation_id = os.environ['JUJU_RELATION_ID']
     self.relation_id = relation_id
 
   @classmethod
@@ -91,5 +98,5 @@ class Relation(object):
     args.append("-") # Key
     if unit_id:
         args.append(unit_id)
-    stdout, stderr = subprocess.check_output(args)
-    return json.loads(output)
+    stdout, _ = _run_command(args)
+    return json.loads(stdout)
