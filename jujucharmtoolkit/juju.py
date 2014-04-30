@@ -23,7 +23,7 @@ def _run_command(args, stdin='', exit_codes=[0], **kwargs):
 
 class Juju(object):
   _cache_config = None
-  
+
   @classmethod
   def config(cls):
     if not cls._cache_config:
@@ -49,7 +49,7 @@ class Juju(object):
 
     if not juju_action:
       raise Exception("Unknown action: %s" % proc_name)
-    
+
     return juju_action
 
   @classmethod
@@ -68,7 +68,18 @@ class Juju(object):
   @classmethod
   def env_uuid(cls):
     return os.environ['JUJU_ENV_UUID']
-  
+
+  @classmethod
+  def get_property(cls, key):
+    args = ["unit-get", "--format", "json", key]
+    stdout, _ = _run_command(args)
+    return json.loads(stdout)
+
+  @classmethod
+  def private_address(cls):
+    return cls.get_property('private-address')
+
+
 class Relation(object):
   def __init__(self, relation_id=None):
     if not relation_id:
@@ -89,13 +100,13 @@ class Relation(object):
       args.append("%s=%s" % (k, v))
 
     _run_command(args)
-  
+
   def get_properties(self, unit_id=None):
     args = ["relation-get", "--format", "json"]
     if self.relation_id:
       args.append("-r")
       args.append(self.relation_id)
-    args.append("-") # Key
+    args.append("-")  # Key
     if unit_id:
         args.append(unit_id)
     stdout, _ = _run_command(args)
