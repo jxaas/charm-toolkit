@@ -75,7 +75,7 @@ def do_download(src, dest, expand=None, sha256=None, **kwargs):
     # We do re-run the SHA calculation (unnecessarily) when it is already downloaded
     actual_sha256 = _get_sha256(dest)
 
-    print "sha256 is: " + sha256
+    print "actual sha256 is: %s" % actual_sha256
     if sha256 and sha256 != actual_sha256:
         print "SHA mismatch"
         raise Exception("SHA mismatch")
