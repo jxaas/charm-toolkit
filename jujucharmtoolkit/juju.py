@@ -77,8 +77,8 @@ class Juju(object):
 
   @classmethod
   def private_address(cls):
-    return cls.get_property('private-address')
-
+    v = cls.get_property('private-address')
+    return str(v)
 
 class Relation(object):
   def __init__(self, relation_id=None):
