@@ -80,6 +80,10 @@ class Juju(object):
     v = cls.get_property('private-address')
     return str(v)
 
+  @classmethod
+  def open_port(cls, port):
+    return _run_command(['open-port', port])
+
 class Relation(object):
   def __init__(self, relation_id=None):
     if not relation_id:
